@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 
 namespace TechJobsConsole
@@ -23,7 +24,6 @@ namespace TechJobsConsole
             columnChoices.Add("all", "All");
 
             Console.WriteLine("Welcome to LaunchCode's TechJobs App!");
-
             // Allow user to search/list until they manually quit with ctrl+c
             while (true)
             {
@@ -63,7 +63,8 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        searchResults = JobData.FindByValue(searchTerm);
+                        PrintJobs(searchResults);
                     }
                     else
                     {
@@ -116,9 +117,44 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
+        public static StringBuilder Elongate(StringBuilder myString, int Length)
+        {
+            if (myString.Length == Length)
+            {
+                return myString;
+            }
+            else
+            {
+                return Elongate(myString.Append(" "), Length);
+            }
+        }
+
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            if (someJobs.Count != 0)
+            {
+                foreach (Dictionary<string, string> job in someJobs)
+                {
+                    Console.WriteLine("****************");
+                    foreach (string key in job.Keys)
+                    {
+                        //maxlen = 15
+                        StringBuilder keyBuilder = new StringBuilder();
+                        keyBuilder.Append(key);
+                        keyBuilder = Elongate(keyBuilder, 15);
+                        Console.WriteLine(keyBuilder + " : " + job[key]);
+                    }
+                    Console.WriteLine("\n");
+                }
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                Console.WriteLine("No search results to display!");
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
     }
 }
